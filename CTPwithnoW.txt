@@ -1,0 +1,234 @@
+loadPackage "Schubert2"
+truncateOutput 1000
+
+B2=base(15,Bundle=>(E,3,"c"),Bundle=>(Hyp1,1,"z"), Bundle=>(Hyp2,1,"zeta"), Bundle=>(T,2,"t"), Bundle=>(Ex,1,"e"))
+B2R=intersectionRing(B2)
+V=abstractSheaf(B2,ChernClass=>1+c2+c3,Rank=>3)
+W=abstractSheaf(B2,ChernClass=>1+1/4*c2, Rank=>2)
+W8=symmetricPower(8,W)
+W12=symmetricPower(12,W)
+V2=symmetricPower(2,dual(V))
+V4=symmetricPower(4,dual(V))
+V6=symmetricPower(6,dual(V))
+V6V4=abstractSheaf(B2,ChernCharacter=>ch(V6)-ch(V4))
+V4V2=abstractSheaf(B2,ChernCharacter=>ch(V4)-ch(V2))
+PT=flagBundle({1,1},dual(T))
+PTR=intersectionRing(PT)
+a=PT.StructureMap
+tau1=chern_1(OO_PT(1))
+Bun=bundles(PT)
+Omegay=Bun#0
+Omegax=Bun#1
+L=Hyp1^**6
+Delta=L+(L**Omegax)+(L**Omegay)+(L**Omegax**Omegax)+(L**Omegay*Omegax)+(L**Omegay**Omegay)+(L**Omegay**Omegax**Omegax)+(L**Omegay**Omegay**Omegax)+(L**Omegay**Omegay**Omegay)+(L**Omegay**Omegay**Omegay**Omegax)+(L**Omegay**Omegay**Omegay**Omegay)+(L**Omegay**Omegay**Omegay**Omegay**Omegay)
+summandslist1=for j from 0 to 12 list ((a^*zeta1^(12-j)*chern_j(Delta)))
+ctpclass=sum summandslist1
+PN1list1=for j from 0 to 9 list (chern_j(V4V2)*(2^(9-j)))
+PN1list2=for j from 0 to 13 list (chern_j(V6V4)*(3^(13-j)))
+PN1class1=sum PN1list1
+PN1class2=sum PN1list2
+PN1=PN1class1*PN1class2
+Elist=for j from 1 to 20 list (-1)^(j+1)*e1^j
+Eclass=sum Elist
+PN1E=PN1*Eclass
+quadric=Hyp1^**2
+quartic=Hyp1^**4
+zetabundle=quadric+quadric**Omegay
+zetaclass=ctop(zetabundle)
+PN1Ezeta=PN1E*zetaclass
+PSdoubleprime=quartic+(quartic**Omegax)+(quartic**Omegay)+(quartic**Omegax**Omegay)+(quartic**Omegay**Omegay)+(quartic**Omegay**Omegay**Omegay)
+K2=abstractSheaf(PT,ChernCharacter=>ch(V2)-ch(zetabundle))
+K4=abstractSheaf(PT,ChernCharacter=>ch(V4)-ch(PSdoubleprime))
+K4K2=abstractSheaf(PT,ChernCharacter=>ch(K4)-ch(K2))
+KK4=abstractSheaf(PT,ChernCharacter=>ch(V6)-ch(Delta)-ch(K4))
+K4K2list=for j from 0 to rank(K4K2) list (chern_j(K4K2)*(2^(rank(K4K2)-j)))
+KK4list=for j from 0 to rank (KK4) list (chern_j(KK4)*(3^(rank(KK4)-j)))
+K4K2class=sum K4K2list
+KK4class=sum KK4list
+segrebundle=abstractSheaf(PT,ChernClass=>KK4class*K4K2class, Rank=>rank(K4K2)+rank(KK4))
+bigtermlist=for j from 0 to 12 list (part(j,PN1Ezeta)*segre_(12-j)(dual(segrebundle)))
+bigterm=sum bigtermlist
+
+
+Push0=toString(a_*(ctpclass+bigterm))
+Push1=toString(a_*(ctpclass+bigterm)*tau1)
+
+B=base(15,Bundle=>(E,3,"c"), Bundle=>(Hyp2,1,"zeta"), Bundle=>(Ex,1,"e"))
+BR=intersectionRing(B)
+V=abstractSheaf(B,ChernClass=>1+c2+c3, Rank=>3)
+PV=projectiveBundle(V)
+PVR=intersectionRing(PV)
+p=PV.StructureMap
+z1=chern_1(OO_PV(1))
+Tp=tangentBundle(p)
+t1=chern_1(Tp)
+t2=chern_2(Tp)
+
+Push00=toString p_*(value(Push0))
+Push01=toString p_*(value(Push0)*z1)
+Push02=toString p_*(value(Push0)*z1^2)
+Push10=toString p_*(value(Push1))
+Push11=toString p_*(value(Push1)*z1)
+Push12=toString p_*(value(Push1)*z1^2)
+
+A=QQ[c2,c3,zeta1,e1, Degrees=>{{2},{3},{1},{1}}]
+
+CTPrelations={Push00,Push01,Push02,Push10,Push11,Push12}
+
+B=base(10,Bundle=>(E,3,"c"), Bundle=>(Hyp,1,"zeta"), Bundle=>(Ex,1,"e"))
+BR=intersectionRing(B)
+V=abstractSheaf(B,ChernClass=>1+c2+c3, Rank=>3)
+PV=projectiveBundle(V)
+PVR=intersectionRing(PV)
+p=PV.StructureMap
+Omegap=cotangentBundle(p)
+z1=chern_1(OO_PV(1))
+L=OO_PV(1)**OO_PV(1)**OO_PV(1)**OO_PV(1)**OO_PV(1)**OO_PV(1)
+Delta1=L+(L**Omegap)+(L**symmetricPower(2,Omegap))+(L**symmetricPower(3,Omegap))
+summandslist=for j from 0 to 10 list ((p^*zeta1^(10-j))*chern_j(Delta1))
+quadruplepointclass=sum summandslist
+Relation1=toString p_*(quadruplepointclass)
+Relation2=toString p_*(quadruplepointclass*z1)
+Relation3=toString p_*(quadruplepointclass*z1^2)
+A=QQ[c2,c3,zeta1, Degrees=>{{2},{3},{1}}]
+quadruplepointrelationslist={Relation1,Relation2,Relation3}
+
+
+
+B2=base(27,Bundle=>(E,3,"c"), Bundle=>(Hyp,1,"z"))
+B2R=intersectionRing(B2)
+V=abstractSheaf(B2,ChernClass=>1+c2+c3, Rank=>3)
+PV1=projectiveBundle(dual(V))
+PV1R=intersectionRing(PV1)
+p=PV1.StructureMap
+z2=chern_1(OO_PV1(1))
+
+
+
+firstterm0klist=for k from 0 to 11 list toString p_*((z1+2*z2)^(27-k))
+firstterm1klist=for k from 0 to 12 list toString p_*(z2*(z1+2*z2)^(27-k))
+firstterm2klist=for k from 0 to 13 list toString p_*(z2^2*(z1+2*z2)^(27-k))
+
+
+B1=base(13,Bundle=>(E,3,"c"))
+B1R=intersectionRing(B1)
+V=abstractSheaf(B1,ChernClass=>1+c2+c3, Rank=>3)
+PV4=flagBundle({1,14},(dual(symmetricPower(4,V))))
+PV4R=intersectionRing(PV4)
+q=PV4.StructureMap
+z1=chern_1(OO_PV4(1))
+
+
+newfirstterm0klist=for k from 0 to 11 list  q_*(value(firstterm0klist#k))
+newfirstterm1klist=for k from 0 to 12 list  q_*(value(firstterm1klist#k))
+newfirstterm2klist=for k from 0 to 13 list  q_*(value(firstterm2klist#k))
+
+alpha011=newfirstterm0klist#11
+
+alpha010=0
+
+alpha09=newfirstterm0klist#9-alpha010*segre_1(symmetricPower(6,V))-alpha011*segre_2(symmetricPower(6,V))
+
+alpha08=newfirstterm0klist#8-alpha09*segre_1(symmetricPower(6,V))-alpha010*segre_2(symmetricPower(6,V))-alpha011*segre_3(symmetricPower(6,V))
+
+alpha07=newfirstterm0klist#7-alpha08*segre_1(symmetricPower(6,V))-alpha09*segre_2(symmetricPower(6,V))-alpha010*segre_3(symmetricPower(6,V))-alpha011*segre_4(symmetricPower(6,V))
+
+alpha06=newfirstterm0klist#6-alpha07*segre_1(symmetricPower(6,V))-alpha08*segre_2(symmetricPower(6,V))-alpha09*segre_3(symmetricPower(6,V))-alpha010*segre_4(symmetricPower(6,V))-alpha011*segre_5(symmetricPower(6,V))
+
+alpha05=newfirstterm0klist#5-alpha06*segre_1(symmetricPower(6,V))-alpha07*segre_2(symmetricPower(6,V))-alpha08*segre_3(symmetricPower(6,V))-alpha09*segre_4(symmetricPower(6,V))-alpha010*segre_5(symmetricPower(6,V))-alpha011*segre_6(symmetricPower(6,V))
+
+alpha04=newfirstterm0klist#4-alpha05*segre_1(symmetricPower(6,V))-alpha06*segre_2(symmetricPower(6,V))-alpha07*segre_3(symmetricPower(6,V))-alpha08*segre_4(symmetricPower(6,V))-alpha09*segre_5(symmetricPower(6,V))-alpha010*segre_6(symmetricPower(6,V))-alpha011*segre_7(symmetricPower(6,V))
+
+alpha03=newfirstterm0klist#3-alpha04*segre_1(symmetricPower(6,V))-alpha05*segre_2(symmetricPower(6,V))-alpha06*segre_3(symmetricPower(6,V))-alpha07*segre_4(symmetricPower(6,V))-alpha08*segre_5(symmetricPower(6,V))-alpha09*segre_6(symmetricPower(6,V))-alpha010*segre_7(symmetricPower(6,V))-alpha011*segre_8(symmetricPower(6,V))
+
+alpha02=newfirstterm0klist#2-alpha03*segre_1(symmetricPower(6,V))-alpha04*segre_2(symmetricPower(6,V))-alpha05*segre_3(symmetricPower(6,V))-alpha06*segre_4(symmetricPower(6,V))-alpha07*segre_5(symmetricPower(6,V))-alpha08*segre_6(symmetricPower(6,V))-alpha09*segre_7(symmetricPower(6,V))-alpha010*segre_8(symmetricPower(6,V))-alpha011*segre_9(symmetricPower(6,V))
+
+alpha01=newfirstterm0klist#1-alpha02*segre_1(symmetricPower(6,V))-alpha03*segre_2(symmetricPower(6,V))-alpha04*segre_3(symmetricPower(6,V))-alpha05*segre_4(symmetricPower(6,V))-alpha06*segre_5(symmetricPower(6,V))-alpha07*segre_6(symmetricPower(6,V))-alpha08*segre_7(symmetricPower(6,V))-alpha09*segre_8(symmetricPower(6,V))-alpha010*segre_9(symmetricPower(6,V))-alpha011*segre_10(symmetricPower(6,V))
+
+alpha00=newfirstterm0klist#0-alpha01*segre_1(symmetricPower(6,V))-alpha02*segre_2(symmetricPower(6,V))-alpha03*segre_3(symmetricPower(6,V))-alpha04*segre_4(symmetricPower(6,V))-alpha05*segre_5(symmetricPower(6,V))-alpha06*segre_6(symmetricPower(6,V))-alpha07*segre_7(symmetricPower(6,V))-alpha08*segre_8(symmetricPower(6,V))-alpha09*segre_9(symmetricPower(6,V))-alpha010*segre_10(symmetricPower(6,V))-alpha011*segre_11(symmetricPower(6,V))
+
+alpha112=newfirstterm1klist#12
+
+alpha111=newfirstterm1klist#11-alpha112*segre_1(symmetricPower(6,V))
+
+alpha110=newfirstterm1klist#10-alpha111*segre_1(symmetricPower(6,V))-alpha112*segre_2(symmetricPower(6,V))
+
+alpha19=newfirstterm1klist#9-alpha110*segre_1(symmetricPower(6,V))-alpha111*segre_2(symmetricPower(6,V))-alpha112*segre_3(symmetricPower(6,V))
+
+alpha18=newfirstterm1klist#8-alpha19*segre_1(symmetricPower(6,V))-alpha110*segre_2(symmetricPower(6,V))-alpha111*segre_3(symmetricPower(6,V))-alpha112*segre_4(symmetricPower(6,V))
+
+alpha17=newfirstterm1klist#7-alpha18*segre_1(symmetricPower(6,V))-alpha19*segre_2(symmetricPower(6,V))-alpha110*segre_3(symmetricPower(6,V))-alpha111*segre_4(symmetricPower(6,V))-alpha112*segre_5(symmetricPower(6,V))
+
+alpha16=newfirstterm1klist#6-alpha17*segre_1(symmetricPower(6,V))-alpha18*segre_2(symmetricPower(6,V))-alpha19*segre_3(symmetricPower(6,V))-alpha110*segre_4(symmetricPower(6,V))-alpha111*segre_5(symmetricPower(6,V))-alpha112*segre_6(symmetricPower(6,V))
+
+alpha15=newfirstterm1klist#5-alpha16*segre_1(symmetricPower(6,V))-alpha17*segre_2(symmetricPower(6,V))-alpha18*segre_3(symmetricPower(6,V))-alpha19*segre_4(symmetricPower(6,V))-alpha110*segre_5(symmetricPower(6,V))-alpha111*segre_6(symmetricPower(6,V))-alpha112*segre_7(symmetricPower(6,V))
+
+alpha14=newfirstterm1klist#4-alpha15*segre_1(symmetricPower(6,V))-alpha16*segre_2(symmetricPower(6,V))-alpha17*segre_3(symmetricPower(6,V))-alpha18*segre_4(symmetricPower(6,V))-alpha19*segre_5(symmetricPower(6,V))-alpha110*segre_6(symmetricPower(6,V))-alpha111*segre_7(symmetricPower(6,V))-alpha112*segre_8(symmetricPower(6,V))
+
+
+alpha13=newfirstterm1klist#3-alpha14*segre_1(symmetricPower(6,V))-alpha15*segre_2(symmetricPower(6,V))-alpha16*segre_3(symmetricPower(6,V))-alpha17*segre_4(symmetricPower(6,V))-alpha18*segre_5(symmetricPower(6,V))-alpha19*segre_6(symmetricPower(6,V))-alpha110*segre_7(symmetricPower(6,V))-alpha111*segre_8(symmetricPower(6,V))-alpha112*segre_9(symmetricPower(6,V))
+
+alpha12=newfirstterm1klist#2-alpha13*segre_1(symmetricPower(6,V))-alpha14*segre_2(symmetricPower(6,V))-alpha15*segre_3(symmetricPower(6,V))-alpha16*segre_4(symmetricPower(6,V))-alpha17*segre_5(symmetricPower(6,V))-alpha18*segre_6(symmetricPower(6,V))-alpha19*segre_7(symmetricPower(6,V))-alpha110*segre_8(symmetricPower(6,V))-alpha111*segre_9(symmetricPower(6,V))-alpha112*segre_10(symmetricPower(6,V))
+
+alpha11=newfirstterm1klist#1-alpha12*segre_1(symmetricPower(6,V))-alpha13*segre_2(symmetricPower(6,V))-alpha14*segre_3(symmetricPower(6,V))-alpha15*segre_4(symmetricPower(6,V))-alpha16*segre_5(symmetricPower(6,V))-alpha17*segre_6(symmetricPower(6,V))-alpha18*segre_7(symmetricPower(6,V))-alpha19*segre_8(symmetricPower(6,V))-alpha110*segre_9(symmetricPower(6,V))-alpha111*segre_10(symmetricPower(6,V))-alpha112*segre_11(symmetricPower(6,V))
+
+alpha10=newfirstterm1klist#0-alpha11*segre_1(symmetricPower(6,V))-alpha12*segre_2(symmetricPower(6,V))-alpha13*segre_3(symmetricPower(6,V))-alpha14*segre_4(symmetricPower(6,V))-alpha15*segre_5(symmetricPower(6,V))-alpha16*segre_6(symmetricPower(6,V))-alpha17*segre_7(symmetricPower(6,V))-alpha18*segre_8(symmetricPower(6,V))-alpha19*segre_9(symmetricPower(6,V))-alpha110*segre_10(symmetricPower(6,V))-alpha111*segre_11(symmetricPower(6,V))-alpha112*segre_12(symmetricPower(6,V))
+
+alpha213=newfirstterm2klist#13
+
+alpha212=newfirstterm2klist#12-alpha213*segre_1(symmetricPower(6,V))
+
+alpha211=newfirstterm2klist#11-alpha212*segre_1(symmetricPower(6,V))-alpha213*segre_2(symmetricPower(6,V))
+
+alpha210=newfirstterm2klist#10-alpha211*segre_1(symmetricPower(6,V))-alpha212*segre_2(symmetricPower(6,V))-alpha213*segre_3(symmetricPower(6,V))
+
+alpha29=newfirstterm2klist#9-alpha210*segre_1(symmetricPower(6,V))-alpha211*segre_2(symmetricPower(6,V))-alpha212*segre_3(symmetricPower(6,V))-alpha213*segre_4(symmetricPower(6,V))
+
+
+alpha28=newfirstterm2klist#8-alpha29*segre_1(symmetricPower(6,V))-alpha210*segre_2(symmetricPower(6,V))-alpha211*segre_3(symmetricPower(6,V))-alpha212*segre_4(symmetricPower(6,V))-alpha213*segre_5(symmetricPower(6,V))
+
+
+alpha27=newfirstterm2klist#7-alpha28*segre_1(symmetricPower(6,V))-alpha29*segre_2(symmetricPower(6,V))-alpha210*segre_3(symmetricPower(6,V))-alpha211*segre_4(symmetricPower(6,V))-alpha212*segre_5(symmetricPower(6,V))-alpha213*segre_6(symmetricPower(6,V))
+
+alpha26=newfirstterm2klist#6-alpha27*segre_1(symmetricPower(6,V))-alpha28*segre_2(symmetricPower(6,V))-alpha29*segre_3(symmetricPower(6,V))-alpha210*segre_4(symmetricPower(6,V))-alpha211*segre_5(symmetricPower(6,V))-alpha212*segre_6(symmetricPower(6,V))-alpha213*segre_7(symmetricPower(6,V))
+
+alpha25=newfirstterm2klist#5-alpha26*segre_1(symmetricPower(6,V))-alpha27*segre_2(symmetricPower(6,V))-alpha28*segre_3(symmetricPower(6,V))-alpha29*segre_4(symmetricPower(6,V))-alpha210*segre_5(symmetricPower(6,V))-alpha211*segre_6(symmetricPower(6,V))-alpha212*segre_7(symmetricPower(6,V))-alpha213*segre_8(symmetricPower(6,V))
+
+alpha24=newfirstterm2klist#4-alpha25*segre_1(symmetricPower(6,V))-alpha26*segre_2(symmetricPower(6,V))-alpha27*segre_3(symmetricPower(6,V))-alpha28*segre_4(symmetricPower(6,V))-alpha29*segre_5(symmetricPower(6,V))-alpha210*segre_6(symmetricPower(6,V))-alpha211*segre_7(symmetricPower(6,V))-alpha212*segre_8(symmetricPower(6,V))-alpha213*segre_9(symmetricPower(6,V))
+
+alpha23=newfirstterm2klist#3-alpha24*segre_1(symmetricPower(6,V))-alpha25*segre_2(symmetricPower(6,V))-alpha26*segre_3(symmetricPower(6,V))-alpha27*segre_4(symmetricPower(6,V))-alpha28*segre_5(symmetricPower(6,V))-alpha29*segre_6(symmetricPower(6,V))-alpha210*segre_7(symmetricPower(6,V))-alpha211*segre_8(symmetricPower(6,V))-alpha212*segre_9(symmetricPower(6,V))-alpha213*segre_10(symmetricPower(6,V))
+
+alpha22=newfirstterm2klist#2-alpha23*segre_1(symmetricPower(6,V))-alpha24*segre_2(symmetricPower(6,V))-alpha25*segre_3(symmetricPower(6,V))-alpha26*segre_4(symmetricPower(6,V))-alpha27*segre_5(symmetricPower(6,V))-alpha28*segre_6(symmetricPower(6,V))-alpha29*segre_7(symmetricPower(6,V))-alpha210*segre_8(symmetricPower(6,V))-alpha211*segre_9(symmetricPower(6,V))-alpha212*segre_10(symmetricPower(6,V))-alpha213*segre_11(symmetricPower(6,V))
+
+alpha21=newfirstterm2klist#1-alpha22*segre_1(symmetricPower(6,V))-alpha23*segre_2(symmetricPower(6,V))-alpha24*segre_3(symmetricPower(6,V))-alpha25*segre_4(symmetricPower(6,V))-alpha26*segre_5(symmetricPower(6,V))-alpha27*segre_6(symmetricPower(6,V))-alpha28*segre_7(symmetricPower(6,V))-alpha29*segre_8(symmetricPower(6,V))-alpha210*segre_9(symmetricPower(6,V))-alpha211*segre_10(symmetricPower(6,V))-alpha212*segre_11(symmetricPower(6,V))-alpha213*segre_12(symmetricPower(6,V))
+
+alpha20=newfirstterm2klist#0-alpha21*segre_1(symmetricPower(6,V))-alpha22*segre_2(symmetricPower(6,V))-alpha23*segre_3(symmetricPower(6,V))-alpha24*segre_4(symmetricPower(6,V))-alpha25*segre_5(symmetricPower(6,V))-alpha26*segre_6(symmetricPower(6,V))-alpha27*segre_7(symmetricPower(6,V))-alpha28*segre_8(symmetricPower(6,V))-alpha29*segre_9(symmetricPower(6,V))-alpha210*segre_10(symmetricPower(6,V))-alpha211*segre_11(symmetricPower(6,V))-alpha212*segre_12(symmetricPower(6,V))-alpha213*segre_13(symmetricPower(6,V))
+
+alpha0list={toString alpha00,toString alpha01,toString alpha02,toString alpha03,toString alpha04,toString alpha05,toString alpha06,toString alpha07,toString alpha08,toString alpha09,toString alpha010,toString alpha011}
+
+alpha1list={toString alpha10,toString alpha11,toString alpha12,toString alpha13,toString alpha14,toString alpha15,toString alpha16,toString alpha17,toString alpha18,toString alpha19,toString alpha110,toString alpha111,toString alpha112}
+
+alpha2list={toString alpha20,toString alpha21,toString alpha22,toString alpha23,toString alpha24,toString alpha25,toString alpha26,toString alpha27,toString alpha28,toString alpha29,toString alpha210,toString alpha211,toString alpha212,toString alpha213}
+
+
+
+for i from 0 to 11 list sectermA0#i=toString(sectermA0#i)
+for i from 0 to 12 list sectermA1#i=toString(sectermA1#i)
+for i from 0 to 13 list sectermA2#i=toString(sectermA2#i)
+
+A=QQ[zeta1,c2,c3, Degrees=>{{1},{2},{3}}]
+
+dlrelationlist1=for j from 0 to 11 list zeta1^j*value(alpha0list#j)
+dlrelationlist2=for j from 0 to 12 list zeta1^j*value(alpha1list#j)
+dlrelationlist3=for j from 0 to 13 list zeta1^j*value(alpha2list#j)
+
+
+dlrelation1=toString sum dlrelationlist1
+dlrelation2=toString sum dlrelationlist2
+dlrelation3=toString sum dlrelationlist3
+doublelinerelationslist={dlrelation1,dlrelation2,dlrelation3}
+
+A=QQ[c2,c3,zeta1,e1, Degrees=>{{2},{3},{1},{1}}]/(c3*e1,zeta1*e1)
+allrelations=flatten(CTPrelations,quadruplepointrelationslist,doublelinerelationslist)
+I=ideal(for j from 0 to length(allrelations)-1 list value(allrelations#j))
+reduceHilbert hilbertSeries I
