@@ -1,0 +1,28 @@
+loadPackage "Schubert2"
+B=base(10,N,Bundle=>(C,2,"c"),Bundle=>(A,1,"e"))
+BR=intersectionRing(B)
+V=abstractSheaf(B,Rank=>2,ChernClass=>1+1/4*c2)
+P=flagBundle({1,1},V)
+p=P.StructureMap
+Omegap=cotangentBundle(p)
+PR=intersectionRing(P)
+z1=chern_1(OO_P(1))
+L=abstractSheaf(P,Rank=>1,ChernClass=>1+2*z1)
+l1=chern_1(L)
+
+Delta8=(L^**4**Omegap^**3)+(L^**4**Omegap^**2)+(L^**4**Omegap)+(L^**4)
+Delta8list=for i from 0 to 4 list (chern_i(Delta8)*((8*e1)^(4-i)))
+Delta8class=sum Delta8list
+Delta12=(L^**6**Omegap^**5)+(L^**6**Omegap^**4)+(L^**6**Omegap^**3)+(L^**6**Omegap^**2)+(L^**6**Omegap)+(L^**6)
+Delta12list=for i from 0 to 6 list chern_i(Delta12)*((12*e1)^(6-i))
+Delta12class=sum Delta12list
+Delta=Delta8class*Delta12class
+
+list1=for k from 0 to 1 list p_*(z1^k*(Delta))
+newlist=for l from 0 to 1 list toString(list1#l)
+
+
+R=QQ
+S=R[e1,c2, Degrees=>{{1},{2}}]
+I=ideal(for i from 0 to 1 list (value(newlist#i)))
+Chow=S/I
