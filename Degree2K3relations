@@ -18,8 +18,8 @@ L=Hyp1^**6
 Delta=L+(L**Omegax)+(L**Omegay)+(L**Omegax**Omegax)+(L**Omegay*Omegax)+(L**Omegay**Omegay)+(L**Omegay**Omegax**Omegax)+(L**Omegay**Omegay**Omegax)+(L**Omegay**Omegay**Omegay)+(L**Omegay**Omegay**Omegay**Omegax)+(L**Omegay**Omegay**Omegay**Omegay)+(L**Omegay**Omegay**Omegay**Omegay**Omegay)
 summandslist1=for j from 0 to 12 list ((a^*zeta1^(12-j)*chern_j(Delta)))
 ctpclass=sum summandslist1
-PN1list1=for j from 0 to 9 list (chern_j(W8)*(8^(9-j)))
-PN1list2=for j from 0 to 13 list (chern_j(W12)*(12^(13-j)))
+PN1list1=for j from 0 to 9 list (chern_j(W8)*(2^(9-j)))
+PN1list2=for j from 0 to 13 list (chern_j(W12)*(3^(13-j)))
 PN1class1=sum PN1list1
 PN1class2=sum PN1list2
 PN1=PN1class1*PN1class2
@@ -38,11 +38,11 @@ V6=symmetricPower(6,dual(V))
 K2=abstractSheaf(PT,ChernCharacter=>ch(V2)-ch(zetabundle))
 K4=abstractSheaf(PT,ChernCharacter=>ch(V4)-ch(PSdoubleprime))
 segreK4K2=abstractSheaf(PT,ChernCharacter=>ch(K2)-ch(K4))
-weightedK4K2list=for i from 0 to 12 list (1/8)^i*chern_i(segreK4K2)
-weightedK4K2=(1/8)^(-rank(segreK4K2))*(sum weightedK4K2list)
+weightedK4K2list=for i from 0 to 12 list (1/2)^i*chern_i(segreK4K2)
+weightedK4K2=(1/2)^(-rank(segreK4K2))*(sum weightedK4K2list)
 segreKK4=abstractSheaf(PT,ChernCharacter=>-ch(V6)+ch(Delta)+ch(K4))
-weightedKK4list=for i from 0 to 12 list (1/12)^i*chern_i(segreKK4)
-weightedKK4=(1/12)^(-rank(segreKK4))*(sum weightedKK4list)
+weightedKK4list=for i from 0 to 12 list (1/3)^i*chern_i(segreKK4)
+weightedKK4=(1/3)^(-rank(segreKK4))*(sum weightedKK4list)
 
 segreclass=part(0,12,weightedKK4*weightedK4K2)
 bigtermlist=for j from 0 to 12 list (part(j,PN1Ezeta)*part(12-j,segreclass))
