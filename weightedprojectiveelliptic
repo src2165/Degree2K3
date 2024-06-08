@@ -11,10 +11,10 @@ L=abstractSheaf(P,Rank=>1,ChernClass=>1+2*z1)
 l1=chern_1(L)
 
 Delta8=(L^**4**Omegap^**3)+(L^**4**Omegap^**2)+(L^**4**Omegap)+(L^**4)
-Delta8list=for i from 0 to 4 list (chern_i(Delta8)*((8*e1)^(4-i)))
+Delta8list=for i from 0 to 4 list (chern_i(Delta8)*((2*e1)^(4-i)))
 Delta8class=sum Delta8list
 Delta12=(L^**6**Omegap^**5)+(L^**6**Omegap^**4)+(L^**6**Omegap^**3)+(L^**6**Omegap^**2)+(L^**6**Omegap)+(L^**6)
-Delta12list=for i from 0 to 6 list chern_i(Delta12)*((12*e1)^(6-i))
+Delta12list=for i from 0 to 6 list chern_i(Delta12)*((3*e1)^(6-i))
 Delta12class=sum Delta12list
 Delta=Delta8class*Delta12class
 
