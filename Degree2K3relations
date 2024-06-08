@@ -49,8 +49,8 @@ bigtermlist=for j from 0 to 12 list (part(j,PN1Ezeta)*part(12-j,segreclass))
 bigterm=sum bigtermlist
 
 
-Push0=toString(a_*(ctpclass+bigterm))
-Push1=toString(a_*((ctpclass+bigterm)*tau1))
+Push0=toString(a_*(ctpclass-bigterm))
+Push1=toString(a_*((ctpclass-bigterm)*tau1))
 
 B=base(15,Bundle=>(E,3,"c"), Bundle=>(Hyp2,1,"zeta"), Bundle=>(Ex,1,"e"))
 BR=intersectionRing(B)
